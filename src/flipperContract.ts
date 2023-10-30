@@ -3,7 +3,7 @@ import {ethers} from "ethers";
 import {Signer as EvmSigner} from "@reef-defi/evm-provider/Signer";
 
 export function getFlipperContract(signer: EthersSigner) {
-    const flipperContractAddressTestnet = '0x6252dC9516792DE316694D863271bd25c07E621B';
+    const flipperContractAddressTestnet = '0x3bb302b1f0dCaFFB87017A7E7816cdB8C5ec710D';
     const FlipperAbi = [
         {
             inputs: [
