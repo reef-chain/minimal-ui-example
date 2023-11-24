@@ -89,9 +89,10 @@ window.addEventListener('load',
         }
     });
 
+// https://substrate.stackexchange.com/questions/2637/determining-the-final-fee-from-a-client/4224#4224
 async function getPaymentFee(provider: Provider) {
-    const blockNumber = 6311674;
-    const extrinsicHash = '0x5e2bd691a19d6e1852d8b35f68851bbd316549d0c82ad17553470e1272704a96';
+    const blockNumber =  7874237;
+    const extrinsicHash = '0xa4868192be3b0babd0f4bd396a85b9bcea97adbd80ed05dce02c4c76c422d48a';
     console.log('GET FEE for block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
     // Get block hash (if we only have block number)
     const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
@@ -105,8 +106,45 @@ async function getPaymentFee(provider: Provider) {
         console.log('Extrinsic with hash=', extrinsicHash, ' does not exist in block ', blockNumber)
         return;
     }
-    const queryInfo = await provider.api.rpc.payment.queryInfo(block.extrinsics[extrinsicIndex].toHex(), blockHash);
-    console.log('extrinsic fee:', queryInfo.partialFee.toHuman());
+
+    const queryInfo = await provider.api.rpc.payment
+        .queryInfo(block.extrinsics[extrinsicIndex].toHex(), block.header.parentHash);
+    const queryFeeDetails = await provider.api.rpc.payment
+        .queryFeeDetails(block.extrinsics[extrinsicIndex].toHex(), block.header.parentHash);
+
+    const baseFee = queryFeeDetails.inclusionFee.isSome 
+        ? queryFeeDetails.inclusionFee.unwrap().baseFee.toBigInt() : BigInt(0);
+    const lenFee = queryFeeDetails.inclusionFee.isSome 
+        ? queryFeeDetails.inclusionFee.unwrap().lenFee.toBigInt() : BigInt(0);
+    const adjustedWeightFee = queryFeeDetails.inclusionFee.isSome 
+        ? queryFeeDetails.inclusionFee.unwrap().adjustedWeightFee.toBigInt() : BigInt(0);
+    const estimatedWeight = queryInfo.weight.toBigInt();
+    const estimatedPartialFee = queryInfo.partialFee.toBigInt();
+    console.log('estimated partial fee:', estimatedPartialFee.toString());
+
+    const apiAt = await provider.api.at(blockHash);
+    const allRecords = await apiAt.query.system.events();
+    const successEvent = allRecords.find((event) =>
+        event.phase.isApplyExtrinsic &&
+        event.phase.asApplyExtrinsic.eq(extrinsicIndex) &&
+        provider.api.events.system.ExtrinsicSuccess.is((event as any).event)
+    );
+    if (!successEvent) {
+        console.log('ExtrinsicSuccess event not found');
+        return;
+    }
+
+    const [dispatchInfo] = successEvent.event.data;
+    const dispatchInfoJSON = dispatchInfo.toJSON() as any;
+    if (dispatchInfoJSON.paysFee === "No") {
+        console.log('actual partial fee:', 0);
+        return;
+    }
+    const actualWeight = BigInt(dispatchInfoJSON.weight);
+    
+    const partialFee = baseFee + lenFee + ((adjustedWeightFee / estimatedWeight) * actualWeight)
+
+    console.log('actual partial fee:', partialFee.toString());
 }
 
 async function isSelectedAddress(addr: string, selectedSigner: Signer, message: string){
