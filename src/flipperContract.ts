@@ -7,7 +7,7 @@ export function getFlipperContract(signer: EvmSigner) {
     if (isMainnet(signer)) {
         throw new Error('Please connect to testnet');
     }
-    const flipperContractAddressTestnet = '0x3bb302b1f0dCaFFB87017A7E7816cdB8C5ec710D';
+    const flipperContractAddressTestnet = '0x6bECC47323fcD240F1c856ab3Aa4EFeC5ad63aFE';
     const FlipperAbi = [
         {
             inputs: [
