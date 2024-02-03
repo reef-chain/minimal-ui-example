@@ -12,31 +12,32 @@ polyfill;
 
 let selectedSigner: Signer;
 let selSignerConnectedEVM: boolean;
-let unsubBalance = () => {};
+let unsubBalance = () => {
+};
 
 document.addEventListener('bind-evm-address', async (evt: any) => {
-    if(await isSelectedAddress(evt.detail as string, selectedSigner, 'Error connecting EVM. Selected signer is not the same.')){
+    if (await isSelectedAddress(evt.detail as string, selectedSigner, 'Error connecting EVM. Selected signer is not the same.')) {
         bindEvm(selectedSigner);
     }
 });
 
 document.addEventListener('get-contract-value', async (evt: any) => {
-    if(await isSelectedAddress(evt.detail as string, selectedSigner, 'Error getting contract value. Selected signer is not the same.')) {
+    if (await isSelectedAddress(evt.detail as string, selectedSigner, 'Error getting contract value. Selected signer is not the same.')) {
         getContractValue(selectedSigner);
     }
 });
 
-document.addEventListener('toggle-contract-value', async (evt:any) => {
-    if(await isSelectedAddress(evt.detail as string, selectedSigner, 'Error changing contract value. Selected signer is not the same.')) {
+document.addEventListener('toggle-contract-value', async (evt: any) => {
+    if (await isSelectedAddress(evt.detail as string, selectedSigner, 'Error changing contract value. Selected signer is not the same.')) {
         toggleContractValue(selectedSigner);
     }
 });
 
-document.addEventListener('send-erc20', async (evt:any) => {
-        sendERC20Transfer(evt.detail.amount, selectedSigner, evt.detail.to, evt.detail.contract).subscribe((val: any) => {
-            // TODO display transaction status in UI
-            console.log('TX =', val)
-        }, (err)=>console.log('TX ERC20 ERR=',err.message));
+document.addEventListener('send-erc20', async (evt: any) => {
+    sendERC20Transfer(evt.detail.amount, selectedSigner, evt.detail.to, evt.detail.contract).subscribe((val: any) => {
+        // TODO display transaction status in UI
+        console.log('TX =', val)
+    }, (err) => console.log('TX ERC20 ERR=', err.message));
 });
 
 window.addEventListener('load',
@@ -50,30 +51,38 @@ window.addEventListener('load',
             // console.log("provider=",await prov.api.genesisHash.toString(), ' signer=',signer);
 
             const testRpcUrl = getProviderFromUrl();
-            if(testRpcUrl){
-               console.log('test rpc=', testRpcUrl) 
+            if (testRpcUrl) {
+                console.log('test rpc=', testRpcUrl)
 
                 let now = Date.now();
-                const testProviderFromUrl=await initProvider(testRpcUrl);
-  await testProviderFromUrl.api.isReadyOrError;
-  console.log(`Provider ready in ${(Date.now() - now) / 1000} seconds`);
-  now = Date.now();
-  const evmNonce = await testProviderFromUrl.api.query.evm.accounts(
-    "0x6a816Ab55d0f161906886a7B9910938a03476a9F"
-  );
-  console.log(`EVM nonce fetched in ${(Date.now() - now) / 1000} seconds`);
+                const testProviderFromUrl = await initProvider(testRpcUrl);
+                await testProviderFromUrl.api.isReadyOrError;
+                console.log(`Provider ready in ${(Date.now() - now) / 1000} seconds`);
+                now = Date.now();
+                const evmNonce = await testProviderFromUrl.api.query.evm.accounts(
+                    "0x6a816Ab55d0f161906886a7B9910938a03476a9F"
+                );
+                console.log(`EVM nonce fetched in ${(Date.now() - now) / 1000} seconds`);
+
+                try {
+                    console.log('calling author...');
+                    await testProviderFromUrl.api.rpc.author.pendingExtrinsics()
+                    console.log('check provider api');
+                } catch (e) {
+                    console.log('provider methods ok');
+                }
             }
 
-            extension.reefSigner.subscribeSelectedSigner(async (sig:ReefSignerResponse) => {
-                console.log("signer cb =",sig);
+            extension.reefSigner.subscribeSelectedSigner(async (sig: ReefSignerResponse) => {
+                console.log("signer cb =", sig);
                 try {
-                    if (sig.status===ReefSignerStatus.NO_ACCOUNT_SELECTED) {
+                    if (sig.status === ReefSignerStatus.NO_ACCOUNT_SELECTED) {
                         throw new Error('Create account in Reef extension or make selected account visible.');
                     }
-                    if (sig.status===ReefSignerStatus.SELECTED_NO_VM_CONNECTION) {
+                    if (sig.status === ReefSignerStatus.SELECTED_NO_VM_CONNECTION) {
                         throw new Error('Connect/bind selected account to Reef EVM.');
                     }
-                    if(sig.data) {
+                    if (sig.data) {
                         console.log("signer connected to mainnet =", await isMainnet(sig.data));
                     }
                     setSelectedSigner(sig.data);
@@ -86,7 +95,7 @@ window.addEventListener('load',
         }
     });
 
-async function isSelectedAddress(addr: string, selectedSigner: Signer, message: string){
+async function isSelectedAddress(addr: string, selectedSigner: Signer, message: string) {
     const selAddr = await selectedSigner.getSubstrateAddress();
     if (addr !== selAddr) {
         displayError({message});
@@ -156,7 +165,7 @@ async function getContractValue(sig) {
     try {
         const ctrRes = await getFlipperValue(sig);
         document.dispatchEvent(new CustomEvent('contract-value', {detail: ctrRes}));
-    }catch (e) {
+    } catch (e) {
         document.dispatchEvent(new CustomEvent('contract-value', {detail: e.message}));
     }
 }
