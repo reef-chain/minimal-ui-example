@@ -1,5 +1,5 @@
 import {Provider} from "@reef-chain/evm-provider";
-import {isMainnet} from "@reef-chain/evm-provider/utils";
+import {isMainnet, resolveEvmAddress} from "@reef-chain/evm-provider/utils";
 import {WsProvider} from "@polkadot/rpc-provider";
 
 export async function getProvider() {
@@ -21,6 +21,9 @@ if(!URL){
     });
     await evmProvider.api.isReadyOrError;
     console.log('CONNECTED provider mainnet=', await isMainnet(evmProvider));
+
+    console.log("EVM addr=",await resolveEvmAddress(evmProvider, "5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP"));
+
 const now=await evmProvider.api.query.timestamp.now()
 const blockH=await evmProvider.api.query.system.number();
 
