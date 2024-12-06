@@ -2,8 +2,8 @@ import polyfill from './polyfill';
 import {flipIt, getFlipperValue} from "./flipperContract";
 import {getSigner, subscribeToBalance, toREEFBalanceNormal} from "./signerUtil";
 import {getInstallExtensionMessage, getReefExtension, NO_EXT_ERR} from "./extensionUtil";
-import {Signer } from "@reef-defi/evm-provider";
-import { resolveEvmAddress} from "@reef-defi/evm-provider/utils";
+import {Signer } from "@reef-chain/evm-provider";
+import { resolveEvmAddress} from "@reef-chain/evm-provider/utils";
 import {InjectedAccount, InjectedExtension, ReefInjected} from "@reef-defi/extension-inject/types";
 import {getProvider} from "./providerUtil";
 

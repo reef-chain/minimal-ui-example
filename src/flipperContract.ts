@@ -1,6 +1,6 @@
 import {Signer as EthersSigner} from "@ethersproject/abstract-signer";
 import {ethers} from "ethers";
-import {Signer as EvmSigner} from "@reef-defi/evm-provider/Signer";
+import {Signer as EvmSigner} from "@reef-chain/evm-provider/Signer";
 
 export function getFlipperContract(signer: EthersSigner) {
     const flipperContractAddressTestnet = '0x3bb302b1f0dCaFFB87017A7E7816cdB8C5ec710D';
