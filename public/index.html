@@ -51,6 +51,10 @@
             document.dispatchEvent((new CustomEvent('send-erc20', {detail: {amount, contract, to}})));
         }
 
+        function getPaymentFees(){
+            document.dispatchEvent((new CustomEvent('get-payment-fees',{detail:{}})));
+        }
+
         function displayError(e) {
             resetUI();
             document.body.classList.add("reef-extension-error");
@@ -270,6 +274,10 @@
 
                 <div class="tx-btns">
                     <button class="btn btn-primary" type="button" onclick="sendERC20Transfer('1000000000000000000', '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP', '0x0000000000000000000000000000000001000000')">Send Tokens</button>
+                </div>
+
+                <div class="tx-btns">
+                    <button class="btn btn-primary" type="button" onclick="getPaymentFees()">Get Payment Fees</button>
                 </div>
 
             </div>

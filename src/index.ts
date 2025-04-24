@@ -40,6 +40,14 @@ document.addEventListener('send-erc20', async (evt: any) => {
     }, (err) => console.log('TX ERC20 ERR=', err.message));
 });
 
+document.addEventListener('get-payment-fees', async (evt: any) => {
+    try {
+        await getPaymentFee();
+    } catch (error) {
+        console.log("error===",error);
+    }
+});
+
 window.addEventListener('load',
     async () => {
         try {
@@ -94,6 +102,38 @@ window.addEventListener('load',
             displayError(e);
         }
     });
+
+
+async function getPaymentFee() {
+    const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
+
+    // we can also get provider and signer
+    const provider = await extension.reefProvider.getNetworkProvider();
+    const blockNumber =  12319401;
+    const extrinsicHash = '0xf3277dd63b7be2f74b27f72e47efcca0e1b38f32648116311e68e84d4099864f';
+    console.log('GET FEE for block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
+
+    // Get block hash (if we only have block number)
+    const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
+    const { block } = await provider.api.rpc.chain.getBlock(blockHash);
+    let extrinsicIndex = undefined;
+    
+    if (block.extrinsics.length) {
+        console.log('extrinsic hashes in block ', block.extrinsics.map(ext => ext.hash.toHuman()));
+        extrinsicIndex = block.extrinsics.findIndex(ext => ext.hash.toHuman() === extrinsicHash);
+    }
+
+    if (extrinsicIndex == null) {
+        console.log('Extrinsic with hash=', extrinsicHash, ' does not exist in block ', blockNumber);
+        return;
+    }
+
+    const queryInfo = await provider.api.rpc.payment.queryInfo(block.extrinsics[extrinsicIndex].toHex(), block.header.parentHash);
+    const queryFeeDetails = await provider.api.rpc.payment.queryFeeDetails(block.extrinsics[extrinsicIndex].toHex(), block.header.parentHash);
+
+    const estimatedPartialFee = queryInfo.partialFee.toBigInt();
+    console.log('actual partial fee for failed transaction:', estimatedPartialFee.toString());
+}
 
 async function isSelectedAddress(addr: string, selectedSigner: Signer, message: string) {
     const selAddr = await selectedSigner.getSubstrateAddress();
