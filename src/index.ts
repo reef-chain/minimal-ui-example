@@ -1,4 +1,4 @@
-import polyfill from './polyfill';
+import './polyfill';
 import {flipIt, getFlipperValue} from "./flipperContract";
 import {subscribeToBalance, toREEFBalanceNormal} from "./signerUtil";
 import {getReefExtension} from "./extensionUtil";
@@ -7,8 +7,6 @@ import {ReefInjected, ReefSignerResponse, ReefSignerStatus} from "@reef-defi/ext
 import {sendERC20Transfer, sendNativeREEFTransfer} from "./transferUtil";
 import {isMainnet} from "@reef-defi/evm-provider/utils";
 import {getProviderFromUrl, initProvider} from "./providerUtil";
-
-polyfill;
 
 let selectedSigner: Signer;
 let selSignerConnectedEVM: boolean;
