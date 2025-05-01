@@ -6,6 +6,24 @@ body {
     height: 70vh;
     background: #EFEBF7;
     text-align: center;
+    margin: 0;
+    padding-top: 80px;
+}
+
+.top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: transparent;
+}
+
+.logo {
+    height: 40px;
 }
 
 .container {
@@ -19,7 +37,8 @@ body {
     margin: 10px 0;
 }
 
-.selected-signer, .reef-balance {
+.selected-signer,
+.reef-balance {
     margin: 20px 0;
 }
 
@@ -55,14 +74,13 @@ body {
 
 .btn-primary {
     color: #fff;
-    background: linear-gradient(135deg,#ae27a5,#742cb2);
+    background: linear-gradient(135deg, #ae27a5, #742cb2);
     box-shadow: 0 5px 20px -10px #742cb2;
 }
 
 .btn-primary:hover {
     filter: brightness(1.15);
 }
-
 
 .btn-secondary {
     color: #a93186;
