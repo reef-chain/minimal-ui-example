@@ -22,6 +22,16 @@ body {
     background: transparent;
 }
 
+.top-bar-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.reef-balance{
+    margin-top: -1rem!important;
+}
+
 .logo {
     height: 40px;
 }
