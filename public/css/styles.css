@@ -179,7 +179,10 @@ code {
 }
 
 .transaction-progress .transaction-progress-display {
-    display: block;
+    /* display: block; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .transaction-progress .tx-btns {

@@ -1,4 +1,4 @@
-import {Signer as EvmSigner} from "@reef-defi/evm-provider";
+import {Signer as EvmSigner} from "@reef-chain/evm-provider";
 import {BigNumber} from "ethers";
 import {initProvider} from "./providerUtil";
 import {InjectedExtension, Unsubcall} from "@reef-defi/extension-inject/types";
@@ -37,8 +37,8 @@ export const getSigner = async (extension: InjectedExtension, testAccount) => {
     return {signer, balance, evmConnected};
 }
 
-export async function initSigner(address: String, extensionSigner) {
-    return  new EvmSigner(await initProvider(), address, extensionSigner);
+export async function initSigner(address: string, extensionSigner:any) {
+    return  new EvmSigner(await initProvider(), address as string, extensionSigner);
 }
 
 function getReefDecimals() {

@@ -5,8 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@reef-chain/evm-provider": "^4.0.5",
-    "@reef-chain/util-lib": "^0.8.2",
-    "@reef-defi/evm-provider": "^1.0.10",
+    "@reef-chain/util-lib": "^3.0.2",
     "@reef-defi/extension-dapp": "^1.0.19",
     "@reef-defi/extension-inject": "^1.0.19",
     "@reef-defi/util-crypto": "^7.8.2",

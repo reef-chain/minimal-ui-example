@@ -2,10 +2,10 @@ import './polyfill';
 import {flipIt, getFlipperValue} from "./flipperContract";
 import {subscribeToBalance, toREEFBalanceNormal} from "./signerUtil";
 import {getReefExtension} from "./extensionUtil";
-import {Signer} from "@reef-defi/evm-provider";
+import {Signer} from "@reef-chain/evm-provider";
 import {ReefInjected, ReefSignerResponse, ReefSignerStatus} from "@reef-defi/extension-inject/types";
 import {sendERC20Transfer, sendNativeREEFTransfer} from "./transferUtil";
-import {isMainnet} from "@reef-defi/evm-provider/utils";
+import {isMainnet} from "@reef-chain/evm-provider";
 import {getProviderFromUrl, initProvider} from "./providerUtil";
 
 let selectedSigner: Signer;

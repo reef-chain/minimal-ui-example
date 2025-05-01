@@ -1,7 +1,7 @@
 import {Signer as EthersSigner} from "@ethersproject/abstract-signer";
 import {ethers} from "ethers";
-import {Signer as EvmSigner} from "@reef-defi/evm-provider/Signer";
-// import {isMainnet} from "@reef-defi/evm-provider/utils";
+import {Signer as EvmSigner} from "@reef-chain/evm-provider";
+// import {isMainnet} from "@reef-chain/evm-provider/utils";
 
 export function getFlipperContract(signer: EvmSigner) {
     //using mainnet only for now @anukulpandey

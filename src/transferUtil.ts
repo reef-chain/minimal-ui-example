@@ -1,4 +1,4 @@
-import {Signer} from "@reef-defi/evm-provider";
+import {Signer} from "@reef-chain/evm-provider";
 import {transactionUtils} from "@reef-chain/util-lib";
 import {Contract} from "ethers";
 import {Observable} from "rxjs";
