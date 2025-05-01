@@ -27,7 +27,7 @@ document.addEventListener('balance-value', (evt => {
 }));
 document.addEventListener('evm-connected', () => document.body.classList.add("evm-connected"));
 document.addEventListener('contract-value', (evt => {
-    document.getElementsByClassName('contract-value')[0].innerHTML = 'Contract value = ' + evt.detail;
+    document.getElementsByClassName('contract-value')[0].innerHTML = 'CONTRACT VALUE: ' + evt.detail;
 }));
 
 function bindEvm(addr) {

@@ -22,8 +22,10 @@
         <h1>Minimal Reef dApp</h1>
         <div class="container">
             <div class="connecting">
-                <p>Connecting to Reef Chain, please wait ...</p>
+                <div class="loader"></div>
+                <p>Connecting to Reef Chain</p>
             </div>
+            
             <div class="content">
                 <div class="bind-evm">
                     <div class="bind-start">
@@ -33,7 +35,8 @@
                 </div>
                 <div class="evm-contract-calls">
                     <div>
-                        <h3 class="contract-value"></h3>
+                        <h3 class="contract-value">
+                        </h3>
                         <small>Note: contract value is not account specific so others can flip it as well.</small>
                     </div>
                     <div class="tx-btns">
