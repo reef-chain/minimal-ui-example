@@ -1,13 +1,19 @@
 import {Signer as EthersSigner} from "@ethersproject/abstract-signer";
 import {ethers} from "ethers";
-import {Signer as EvmSigner} from "@reef-defi/evm-provider/Signer";
-import {isMainnet} from "@reef-defi/evm-provider/utils";
+import {Signer as EvmSigner} from "@reef-chain/evm-provider";
+// import {isMainnet} from "@reef-chain/evm-provider/utils";
 
 export function getFlipperContract(signer: EvmSigner) {
-    if (isMainnet(signer)) {
-        throw new Error('Please connect to testnet');
-    }
-    const flipperContractAddressTestnet = '0x6bECC47323fcD240F1c856ab3Aa4EFeC5ad63aFE';
+    //using mainnet only for now @anukulpandey
+    // if (isMainnet(signer)) {
+    //     throw new Error('Please connect to testnet');
+    // }
+
+    // const flipperContractAddressTestnet = '0x6bECC47323fcD240F1c856ab3Aa4EFeC5ad63aFE'; //TESTNET CONTRACT ADDRESS
+
+    // MAINNET CONTRACT ADDRESS
+    const flipperContractAddressTestnet = '0x62dC5b4eDc7a54d21BFdc5162ef5De6C5aF792Ff';
+
     const FlipperAbi = [
         {
             inputs: [
@@ -41,6 +47,7 @@ export function getFlipperContract(signer: EvmSigner) {
             type: 'function'
         }
     ];
+    //@ts-ignore
     return new ethers.Contract(flipperContractAddressTestnet, FlipperAbi, signer as EthersSigner);
 }
 

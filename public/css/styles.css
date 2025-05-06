@@ -1,0 +1,207 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    background: #EFEBF7;
+    text-align: center;
+    margin: 0;
+    padding-top: 80px;
+}
+
+.top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: transparent;
+}
+
+.top-bar-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.reef-balance{
+    margin-top: -1rem!important;
+}
+
+.logo {
+    height: 40px;
+}
+
+.container {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 3px 30px 0 rgba(0, 0, 0, .07);
+    padding: 20px 40px;
+}
+
+.connecting {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.selected-signer,
+.reef-balance {
+    margin: 20px 0;
+}
+
+.content {
+    display: none;
+    margin: 30px 0;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bind-evm {
+    margin: 10px 0;
+}
+
+.bind-start {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn {
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, #ae27a5, #742cb2);
+    box-shadow: 0 5px 20px -10px #742cb2;
+}
+
+.btn-primary:hover {
+    filter: brightness(1.15);
+}
+
+.btn-secondary {
+    color: #a93186;
+    background: #e8dff0;
+}
+
+.btn-secondary:hover {
+    background: #e1d5ec;
+}
+
+.evm-contract-calls {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contract-value {
+    margin: 10px 0;
+}
+
+.tx-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.transaction-progress-display {
+    margin: 20px 0;
+}
+
+.error-display {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: red;
+}
+
+.error-msg {
+    margin: 10px 0;
+}
+
+.extension-initialized.connected .content {
+    display: block;
+}
+
+.extension-initialized .connecting {
+    display: none;
+}
+
+.error-display {
+    display: none;
+}
+
+.reef-extension-error .error-display {
+    display: block;
+}
+
+code {
+    background-color: #ECEFF1;
+}
+
+.evm-contract-calls {
+    display: none;
+}
+
+.evm-connected .evm-contract-calls {
+    display: block;
+}
+
+.evm-connected .bind-evm {
+    display: none;
+}
+
+.transaction-progress .bind-start {
+    display: none;
+}
+
+.transaction-progress-display {
+    display: none;
+}
+
+.transaction-progress .transaction-progress-display {
+    /* display: block; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.transaction-progress .tx-btns {
+    display: none;
+}
+
+/* circular loader */
+
+
+.loader {
+    width: 16px;
+    height: 16px;
+    border: 3px solid #ccc;
+    border-top: 3px solid #ae27a5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

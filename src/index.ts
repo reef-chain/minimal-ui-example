@@ -1,14 +1,12 @@
-import polyfill from './polyfill';
+import './polyfill';
 import {flipIt, getFlipperValue} from "./flipperContract";
 import {subscribeToBalance, toREEFBalanceNormal} from "./signerUtil";
 import {getReefExtension} from "./extensionUtil";
-import {Signer} from "@reef-defi/evm-provider";
-import {ReefInjected, ReefSignerResponse, ReefSignerStatus} from "@reef-defi/extension-inject/types";
+import {Signer} from "@reef-chain/evm-provider";
+import { extension as reefExt } from '@reef-chain/util-lib';
 import {sendERC20Transfer, sendNativeREEFTransfer} from "./transferUtil";
-import {isMainnet} from "@reef-defi/evm-provider/utils";
+import {isMainnet} from "@reef-chain/evm-provider";
 import {getProviderFromUrl, initProvider} from "./providerUtil";
-
-polyfill;
 
 let selectedSigner: Signer;
 let selSignerConnectedEVM: boolean;
@@ -43,7 +41,7 @@ document.addEventListener('send-erc20', async (evt: any) => {
 window.addEventListener('load',
     async () => {
         try {
-            const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
+            const extension = await getReefExtension('Minimal DApp Example') as reefExt.ReefInjected;
 
             // we can also get provider and signer
             // const prov = await extension.reefProvider.getNetworkProvider();
@@ -73,13 +71,13 @@ window.addEventListener('load',
                 }
             }
 
-            extension.reefSigner.subscribeSelectedSigner(async (sig: ReefSignerResponse) => {
+            extension.reefSigner.subscribeSelectedSigner(async (sig: reefExt.ReefSignerResponse) => {
                 console.log("signer cb =", sig);
                 try {
-                    if (sig.status === ReefSignerStatus.NO_ACCOUNT_SELECTED) {
+                    if (sig.status === reefExt.ReefSignerStatus.NO_ACCOUNT_SELECTED) {
                         throw new Error('Create account in Reef extension or make selected account visible.');
                     }
-                    if (sig.status === ReefSignerStatus.SELECTED_NO_VM_CONNECTION) {
+                    if (sig.status === reefExt.ReefSignerStatus.SELECTED_NO_VM_CONNECTION) {
                         throw new Error('Connect/bind selected account to Reef EVM.');
                     }
                     if (sig.data) {

@@ -1,7 +1,7 @@
-import {Signer as EvmSigner} from "@reef-defi/evm-provider";
+import {Signer as EvmSigner} from "@reef-chain/evm-provider";
 import {BigNumber} from "ethers";
 import {initProvider} from "./providerUtil";
-import {InjectedExtension, Unsubcall} from "@reef-defi/extension-inject/types";
+import { extension as reefExt } from "@reef-chain/util-lib";
 
 export const toREEFBalanceNormal = (balanceBNDecimal: BigNumber|string) => {
     if(typeof balanceBNDecimal === 'string'){
@@ -10,7 +10,7 @@ export const toREEFBalanceNormal = (balanceBNDecimal: BigNumber|string) => {
     return  balanceBNDecimal.div(getReefDecimals());
 }
 
-export const subscribeToBalance = async (signer: EvmSigner, cb: (freeBalance: any)=>void): Promise<Unsubcall> => {
+export const subscribeToBalance = async (signer: EvmSigner, cb: (freeBalance: any)=>void): Promise<reefExt.Unsubcall> => {
     let address = await signer.getSubstrateAddress();
     const unsub = await signer.provider.api.query.system.account(address, ({ nonce, data: balance }) => {
         cb(BigNumber.from(balance.free.toString()));
@@ -18,7 +18,7 @@ export const subscribeToBalance = async (signer: EvmSigner, cb: (freeBalance: an
     return unsub;
 }
 
-export const getSigner = async (extension: InjectedExtension, testAccount) => {
+export const getSigner = async (extension: reefExt.InjectedExtension, testAccount) => {
     const signer:EvmSigner = await initSigner(testAccount.address, extension.signer);
 
     let address = await signer.getAddress();
@@ -37,8 +37,8 @@ export const getSigner = async (extension: InjectedExtension, testAccount) => {
     return {signer, balance, evmConnected};
 }
 
-export async function initSigner(address: String, extensionSigner) {
-    return  new EvmSigner(await initProvider(), address, extensionSigner);
+export async function initSigner(address: string, extensionSigner:any) {
+    return  new EvmSigner(await initProvider(), address as string, extensionSigner);
 }
 
 function getReefDecimals() {
