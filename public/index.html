@@ -25,7 +25,7 @@
                 <div class="loader"></div>
                 <p>Connecting to Reef Chain</p>
             </div>
-            
+
             <div class="content">
                 <div class="bind-evm">
                     <div class="bind-start">
@@ -51,14 +51,27 @@
                             onclick="sendERC20Transfer('1000000000000000000', '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP', '0x0000000000000000000000000000000001000000')">Send
                             Tokens</button>
                     </div>
+                    <hr>
 
                     <div class="tx-btns">
-                        <button class="btn btn-primary" type="button" onclick="getFailedPaymentFees(12319401,'0xf3277dd63b7be2f74b27f72e47efcca0e1b38f32648116311e68e84d4099864f')">Get Failed Payment Fees</button>
+                        <div>
+                            <div>📦 #Block No: 12319401</div>
+                            <button class="btn btn-primary" type="button"
+                                onclick="getFailedPaymentFees(12319401,'0xf3277dd63b7be2f74b27f72e47efcca0e1b38f32648116311e68e84d4099864f')">Get
+                                Failed Payment Fees</button>
+                        </div>
+                        <div>
+                            <div>📦 #Block No: 7874237</div>
+                            <button class="btn btn-primary" type="button"
+                                onclick="getPaymentFees(7874237,'0xa4868192be3b0babd0f4bd396a85b9bcea97adbd80ed05dce02c4c76c422d48a')">Get
+                                Payment Fees</button>
 
-                        <button class="btn btn-primary" type="button" onclick="getPaymentFees(7874237,'0xa4868192be3b0babd0f4bd396a85b9bcea97adbd80ed05dce02c4c76c422d48a')">Get Payment Fees</button>
+                        </div>
                     </div>
-                    
-                    <button class="btn btn-primary" type="button" onclick="logBlockExtrinsics(12470815)">Log Extrinsics and Events</button>
+<div>
+    <div>📦 #Block No: 12470815</div>
+    <button class="btn btn-primary" type="button" onclick="logBlockExtrinsics(12470815)">Log Extrinsics and Events</button>
+    </div>
 
                 </div>
                 <div class="transaction-progress-display">
