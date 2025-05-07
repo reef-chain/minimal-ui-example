@@ -205,7 +205,7 @@ async function getFailedPaymentFees(blockNumber:any,extrinsicHash:string) {
     const provider = await extension.reefProvider.getNetworkProvider();
     // const blockNumber =  12319401;
     // const extrinsicHash = '0xf3277dd63b7be2f74b27f72e47efcca0e1b38f32648116311e68e84d4099864f';
-    console.log('GET FEE for block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
+    console.log('GET FEE for 📦 block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
 
     // Get block hash (if we only have block number)
     const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
@@ -238,7 +238,7 @@ async function getPaymentFee(blockNumber:any,extrinsicHash:string) {
 
     // const blockNumber =  7874237;
     // const extrinsicHash = '0xa4868192be3b0babd0f4bd396a85b9bcea97adbd80ed05dce02c4c76c422d48a';
-    console.log('GET FEE for block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
+    console.log('GET FEE for 📦 block nr=', blockNumber, ' extrinsic hash=', extrinsicHash);
     // Get block hash (if we only have block number)
     const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
     const { block } = await provider.api.rpc.chain.getBlock(blockHash);
@@ -290,4 +290,42 @@ async function getPaymentFee(blockNumber:any,extrinsicHash:string) {
     const partialFee = baseFee + lenFee + ((adjustedWeightFee / estimatedWeight) * actualWeight)
 
     console.log('actual partial fee:', partialFee.toString());
+}
+
+document.addEventListener('log-block-extrinsics', async (evt: any) => {
+    try {
+        await logBlockExtrinsicsAndEvents(evt.detail.blockNumber);
+    } catch (error) {
+        console.log("error===",error);
+    }
+});
+
+async function logBlockExtrinsicsAndEvents(blockNumber: number) {
+    const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
+    const provider = await extension.reefProvider.getNetworkProvider();
+
+    const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
+    const { block } = await provider.api.rpc.chain.getBlock(blockHash);
+    const events = await provider.api.query.system.events.at(blockHash);
+
+    console.log(`\n📦 Block #${blockNumber} - Hash: ${blockHash.toString()}`);
+    block.extrinsics.forEach((extrinsic, index) => {
+        console.log(`Extrinsic [${index}]`);
+        console.log('Method:', extrinsic.method.method);
+        console.log('Section:', extrinsic.method.section);
+        console.log('Args:', extrinsic.method.args.map(arg => arg.toString()).join(', '));
+        console.log('Signer:', extrinsic.signer?.toString() || 'N/A');
+        console.log('Hash:', extrinsic.hash.toHex());
+
+        const relatedEvents = events;
+
+        if (relatedEvents.length) {
+            console.log('Events:');
+            relatedEvents.forEach(({ event }) => {
+                console.log(`- ${event.section}.${event.method}: ${event.data.toString()}`);
+            });
+        } else {
+            console.log('No events found for this extrinsic.');
+        }
+    });
 }

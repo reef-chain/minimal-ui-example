@@ -84,3 +84,9 @@ function getPaymentFees(blockNumber,extrinsicHash){
         extrinsicHash
     }})));
 }
+
+function logBlockExtrinsics(blockNumber){
+    document.dispatchEvent((new CustomEvent('log-block-extrinsics',{detail:{
+        blockNumber,
+    }})));
+}
