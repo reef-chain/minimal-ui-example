@@ -70,3 +70,17 @@ async function resetUI() {
     document.getElementsByClassName('reef-balance')[0].innerHTML = '';
     clearError();
 }
+
+function getFailedPaymentFees(blockNumber,extrinsicHash){
+    document.dispatchEvent((new CustomEvent('get-failed-payment-fees',{detail:{
+        blockNumber,
+        extrinsicHash
+    }})));
+}
+
+function getPaymentFees(blockNumber,extrinsicHash){
+    document.dispatchEvent((new CustomEvent('get-payment-fees',{detail:{
+        blockNumber,
+        extrinsicHash
+    }})));
+}
