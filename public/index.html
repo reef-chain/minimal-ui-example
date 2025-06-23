@@ -68,10 +68,24 @@
 
                         </div>
                     </div>
-<div>
-    <div>📦 #Block No: 12470815</div>
-    <button class="btn btn-primary" type="button" onclick="logBlockExtrinsics(12470815)">Log Extrinsics and Events</button>
-    </div>
+                    <div>
+                        <div>📦 #Block No: 12470815</div>
+                        <button class="btn btn-primary" type="button" onclick="logBlockExtrinsics(12470815)">Log
+                            Extrinsics and Events</button>
+                    </div>
+
+                    <div>
+                        <div>❌ Failed Transaction</div>
+                        <button class="btn btn-primary" type="button"
+                            onclick="checkIfFailedTx('0x9cb431f3805e917a20762fad48e7edc642fc32e57af6138f1dd43aff45e6eec6',1)">Failed Transaction Details</button>
+                    </div>
+
+                    <div>
+                        <div>📦 Block Events from hash</div>
+                        <button class="btn btn-primary" type="button"
+                            onclick="getBlockEvents('0x089175a1919ed8135d4e24e84e71aa81a491699bc45dd2126577576ef27ee6c8')">Get
+                            Block Events</button>
+                    </div>
 
                 </div>
                 <div class="transaction-progress-display">

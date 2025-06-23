@@ -85,6 +85,19 @@ function getPaymentFees(blockNumber,extrinsicHash){
     }})));
 }
 
+function getBlockEvents(blockHash){
+    document.dispatchEvent((new CustomEvent('get-block-events',{detail:{
+        blockHash
+    }})));
+}
+
+function checkIfFailedTx(blockHash,extrinsicIndex){
+    document.dispatchEvent((new CustomEvent('check-failed-tx',{detail:{
+        blockHash,
+        extrinsicIndex
+    }})));
+}
+
 function logBlockExtrinsics(blockNumber){
     document.dispatchEvent((new CustomEvent('log-block-extrinsics',{detail:{
         blockNumber,
