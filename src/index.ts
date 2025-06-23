@@ -197,6 +197,103 @@ document.addEventListener('get-payment-fees', async (evt: any) => {
     }
 });
 
+document.addEventListener('get-block-events', async (evt: any) => {
+    try {
+        await getBlockEvents(evt.detail.blockHash);
+    } catch (error) {
+        console.log("error===",error);
+    }
+});
+
+document.addEventListener('check-failed-tx', async (evt: any) => {
+    try {
+        await checkIfTxFailed(evt.detail.blockHash,evt.detail.extrinsicIndex);
+    } catch (error) {
+        console.log("error===",error);
+    }
+});
+async function checkIfTxFailed(blockHash: string, extrinsicIndex: number): Promise<boolean> {
+    const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
+    const provider = await extension.reefProvider.getNetworkProvider();
+
+    const api = provider.api;
+
+    console.log(`🔎 Checking extrinsic at index ${extrinsicIndex} in block ${blockHash}...`);
+
+    // Get the block and all extrinsics
+    const signedBlock = await api.rpc.chain.getBlock(blockHash);
+    const extrinsics = signedBlock.block.extrinsics;
+
+    if (extrinsicIndex >= extrinsics.length) {
+        console.log('❌ Invalid extrinsic index.');
+        return false;
+    }
+
+    const extrinsic = extrinsics[extrinsicIndex];
+    console.log('➡️ Extrinsic:', extrinsic.method.toHuman());
+
+    // Try to get the events using a fail-safe wrapper
+    let events = [];
+    try {
+        const apiAt = await api.at(blockHash);
+        events = await apiAt.query.system.events();
+    } catch (err) {
+        console.warn('⚠️ Could not decode events, skipping detailed check.');
+        return false;
+    }
+
+    // Filter only those events that belong to this extrinsic
+    for (const record of events) {
+        const { event, phase } = record;
+
+        if (
+            phase.isApplyExtrinsic &&
+            Number(phase.asApplyExtrinsic) === extrinsicIndex &&
+            event.method === 'ExtrinsicFailed'
+        ) {
+            console.log('❌ Transaction failed!');
+            console.log('Error details:', event.toHuman());
+            return true;
+        }
+    }
+
+    console.log('✅ Transaction succeeded or no failure found.');
+    return false;
+}
+
+
+
+async function getBlockEvents(blockHash: string) {
+    const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
+    const provider = await extension.reefProvider.getNetworkProvider();
+
+    console.log(`\n📦 Fetching events for block hash: ${blockHash}`);
+    const apiAt = await provider.api.at(blockHash);
+    const events = await apiAt.query.system.events();
+
+    if (!events.length) {
+        console.log('❌ No events found in this block.');
+        return;
+    }
+
+    console.log(`📄 Total Events: ${events.length}`);
+    events.forEach((record, index) => {
+        const { event, phase } = record;
+        const types = event.typeDef;
+
+        console.log(`\n🔹 Event [${index}]`);
+        console.log(`- Phase: ${phase.toString()}`);
+        console.log(`- Section: ${event.section}`);
+        console.log(`- Method: ${event.method}`);
+        console.log(`- Documentation: ${event.meta.docs.map(d => d.toString()).join(' ')}`);
+
+        event.data.forEach((data, i) => {
+            console.log(`  • ${types[i].type}: ${data.toString()}`);
+        });
+    });
+}
+
+
 
 async function getFailedPaymentFees(blockNumber:any,extrinsicHash:string) {
     const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
