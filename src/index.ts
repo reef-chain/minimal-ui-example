@@ -400,26 +400,45 @@ document.addEventListener('log-block-extrinsics', async (evt: any) => {
 async function logBlockExtrinsicsAndEvents(blockNumber: number) {
     const extension = await getReefExtension('Minimal DApp Example') as ReefInjected;
     const provider = await extension.reefProvider.getNetworkProvider();
+    const api = provider.api;
 
-    const blockHash = await provider.api.rpc.chain.getBlockHash(blockNumber);
-    const { block } = await provider.api.rpc.chain.getBlock(blockHash);
-    const events = await provider.api.query.system.events.at(blockHash);
+    const blockHash = await api.rpc.chain.getBlockHash(blockNumber);
+    const { block } = await api.rpc.chain.getBlock(blockHash);
+    const apiAt = await api.at(blockHash);
+    let events = [];
+
+    try {
+        events = await apiAt.query.system.events();
+    } catch (err) {
+        console.warn('⚠️ Could not decode events at this block. Skipping event decoding.');
+        events = [];
+    }
 
     console.log(`\n📦 Block #${blockNumber} - Hash: ${blockHash.toString()}`);
+
     block.extrinsics.forEach((extrinsic, index) => {
-        console.log(`Extrinsic [${index}]`);
+        console.log(`\n🔹 Extrinsic [${index}]`);
         console.log('Method:', extrinsic.method.method);
         console.log('Section:', extrinsic.method.section);
         console.log('Args:', extrinsic.method.args.map(arg => arg.toString()).join(', '));
         console.log('Signer:', extrinsic.signer?.toString() || 'N/A');
         console.log('Hash:', extrinsic.hash.toHex());
 
-        const relatedEvents = events;
+        // Filter only relevant events
+        const relatedEvents = events.filter(({ phase }) =>
+            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index)
+        );
 
         if (relatedEvents.length) {
-            console.log('Events:');
+            console.log('📍 Events:');
             relatedEvents.forEach(({ event }) => {
                 console.log(`- ${event.section}.${event.method}: ${event.data.toString()}`);
+
+                // Detect failure
+                if (event.method === 'ExtrinsicFailed') {
+                    console.warn('❌ This extrinsic failed!');
+                    console.warn('Details:', event.toHuman());
+                }
             });
         } else {
             console.log('No events found for this extrinsic.');
